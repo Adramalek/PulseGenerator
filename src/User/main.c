@@ -20,26 +20,39 @@
  
 #include "main.h"
 
-void InitializeDelay(){
-	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3, ENABLE);
+TIM_Data training_timer = {41999, TRAINING_TIME*1000-1, TIM5, RCC_APB1Periph_TIM5, TIM5_IRQn};
+TIM_Data delay_timer = {83, DELAY*1000-1, TIM3, RCC_APB1Periph_TIM3, TIM3_IRQn};
+TIM_Data pre_timer = {83, 19999, TIM4, RCC_APB1Periph_TIM4, TIM4_IRQn};
+TIM_Data post_timer = {83, 19999, TIM2, RCC_APB1Periph_TIM2, TIM2_IRQn};
+
+void Init_Timer(TIM_Data *timer){
+	RCC_APB1PeriphClockCmd(timer->RCC_APB1Periph_TIM, ENABLE);
 	TIM_TimeBaseInitTypeDef timerInitStructure; 
-	timerInitStructure.TIM_Prescaler = 83;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             ;
+	timerInitStructure.TIM_Prescaler = timer->Prescaler;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          ;
 	timerInitStructure.TIM_CounterMode = TIM_CounterMode_Up;
-	timerInitStructure.TIM_Period = DELAY*1000-1;
+	timerInitStructure.TIM_Period = timer->Period;
 	timerInitStructure.TIM_ClockDivision = 0;
 	timerInitStructure.TIM_RepetitionCounter = 0;
-	TIM_TimeBaseInit(TIM3, &timerInitStructure);
-
+	TIM_TimeBaseInit(TIM5, &timerInitStructure);
+	
 	NVIC_InitTypeDef nvicStructure;
-	nvicStructure.NVIC_IRQChannel = TIM3_IRQn;
+	nvicStructure.NVIC_IRQChannel = timer->NVIC_TIM_IRQChannel;
 	nvicStructure.NVIC_IRQChannelPreemptionPriority = 0;
 	nvicStructure.NVIC_IRQChannelSubPriority = 1;
 	nvicStructure.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_Init(&nvicStructure);
 	
-	TIM_ClearITPendingBit (TIM3, TIM_IT_Update);
-  TIM_SetCounter (TIM3, 0);
-  TIM_ITConfig (TIM3, TIM_IT_Update, ENABLE);
+	TIM_ClearITPendingBit (timer->TIM, TIM_IT_Update);
+  TIM_SetCounter (timer->TIM, 0);
+  TIM_ITConfig (timer->TIM, TIM_IT_Update, ENABLE);
+}
+
+void InitTrainingTimer(){
+	Init_Timer(&training_timer);
+}
+
+void InitializeDelay(){
+	Init_Timer(&delay_timer);
 }
 
 void InitializePost()
@@ -51,26 +64,7 @@ void InitializePost()
 	gpioStructure.GPIO_Speed = GPIO_Speed_50MHz;
 	GPIO_Init(GPIOD, &gpioStructure);
 	
-	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2, ENABLE);
-	TIM_TimeBaseInitTypeDef timerInitStructure; 
-	timerInitStructure.TIM_Prescaler = 83;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             ;
-	timerInitStructure.TIM_CounterMode = TIM_CounterMode_Up;
-	timerInitStructure.TIM_Period = 19999;
-	timerInitStructure.TIM_ClockDivision = 0;
-	timerInitStructure.TIM_RepetitionCounter = 0;
-	TIM_TimeBaseInit(TIM2, &timerInitStructure);
-
-
-	NVIC_InitTypeDef nvicStructure;
-	nvicStructure.NVIC_IRQChannel = TIM2_IRQn;
-	nvicStructure.NVIC_IRQChannelPreemptionPriority = 0;
-	nvicStructure.NVIC_IRQChannelSubPriority = 1;
-	nvicStructure.NVIC_IRQChannelCmd = ENABLE;
-	NVIC_Init(&nvicStructure);
-	
-	TIM_ClearITPendingBit (TIM2, TIM_IT_Update);
-  TIM_SetCounter (TIM2, 0);
-  TIM_ITConfig (TIM2, TIM_IT_Update, ENABLE);
+	Init_Timer(&post_timer);
 }
 
 void InitializePre()
@@ -84,26 +78,7 @@ void InitializePre()
 	gpioStructure.GPIO_Speed = GPIO_Speed_50MHz;
 	GPIO_Init(GPIOD, &gpioStructure);
 
-	RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM4, ENABLE);
-	TIM_TimeBaseInitTypeDef timerInitStructure; 
-	timerInitStructure.TIM_Prescaler = 83;
-	timerInitStructure.TIM_CounterMode = TIM_CounterMode_Up;
-	timerInitStructure.TIM_Period = 19999;
-	timerInitStructure.TIM_ClockDivision = 0;
-	timerInitStructure.TIM_RepetitionCounter = 0;
-	TIM_TimeBaseInit(TIM4, &timerInitStructure);
-
-	
-	NVIC_InitTypeDef nvicStructure;
-	nvicStructure.NVIC_IRQChannel = TIM4_IRQn;
-	nvicStructure.NVIC_IRQChannelPreemptionPriority = 0;
-	nvicStructure.NVIC_IRQChannelSubPriority = 1;
-	nvicStructure.NVIC_IRQChannelCmd = ENABLE;
-	NVIC_Init(&nvicStructure);
-	
-	TIM_ClearITPendingBit (TIM4, TIM_IT_Update);
-  TIM_SetCounter (TIM4, 0);
-  TIM_ITConfig (TIM4, TIM_IT_Update, ENABLE);
+	Init_Timer(&pre_timer);
 }
 
 
@@ -111,8 +86,8 @@ void TIM2_IRQHandler(){
 	if (TIM_GetITStatus(TIM2, TIM_IT_Update) != RESET){
 		TIM_ClearITPendingBit(TIM2, TIM_IT_Update); 
 		GPIO_WriteBit(GPIOD, GPIO_Pin_15, Bit_RESET);
-		TM_DISCO_LedOff(LED_ORANGE);
-		//TIM_Cmd(TIM2, DISABLE);
+		TM_DISCO_LedToggle(LED_ORANGE);
+		TIM_Cmd(TIM2, DISABLE);
 	}
 }
 
@@ -130,8 +105,8 @@ void TIM4_IRQHandler(){
 	if (TIM_GetITStatus(TIM4, TIM_IT_Update) != RESET){
 		TIM_ClearITPendingBit(TIM4, TIM_IT_Update);
 		GPIO_WriteBit(GPIOD, GPIO_Pin_12, Bit_RESET);
-		TM_DISCO_LedOff(LED_RED);
-		//TIM_Cmd(TIM4, DISABLE);
+		TM_DISCO_LedToggle(LED_RED);
+		TIM_Cmd(TIM4, DISABLE);
 	}
 }
 

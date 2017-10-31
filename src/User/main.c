@@ -112,7 +112,7 @@ void TIM2_IRQHandler(){
 		TIM_ClearITPendingBit(TIM2, TIM_IT_Update); 
 		GPIO_WriteBit(GPIOD, GPIO_Pin_15, Bit_RESET);
 		TM_DISCO_LedOff(LED_ORANGE);
-		//TIM_Cmd(TIM2, DISABLE);
+		TIM_Cmd(TIM2, DISABLE);
 	}
 }
 
@@ -131,7 +131,7 @@ void TIM4_IRQHandler(){
 		TIM_ClearITPendingBit(TIM4, TIM_IT_Update);
 		GPIO_WriteBit(GPIOD, GPIO_Pin_12, Bit_RESET);
 		TM_DISCO_LedOff(LED_RED);
-		//TIM_Cmd(TIM4, DISABLE);
+		TIM_Cmd(TIM4, DISABLE);
 	}
 }
 

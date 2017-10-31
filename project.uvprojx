@@ -560,69 +560,24 @@
           <GroupName>TM</GroupName>
           <Files>
             <File>
-              <FileName>tm_stm32f4_delay.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\00-STM32F429_LIBRARIES\tm_stm32f4_delay.h</FilePath>
-            </File>
-            <File>
-              <FileName>tm_stm32f4_delay.c</FileName>
+              <FileName>tm_stm32f4_disco.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\00-STM32F429_LIBRARIES\tm_stm32f4_delay.c</FilePath>
+              <FilePath>.\00-STM32F429_LIBRARIES\tm_stm32f4_disco.c</FilePath>
             </File>
             <File>
               <FileName>tm_stm32f4_disco.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\00-STM32F429_LIBRARIES\tm_stm32f4_disco.h</FilePath>
-            </File>
-            <File>
-              <FileName>tm_stm32f4_disco.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\00-STM32F429_LIBRARIES\tm_stm32f4_disco.c</FilePath>
-            </File>
-            <File>
-              <FileName>tm_stm32f4_timer_properties.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\00-STM32F429_LIBRARIES\tm_stm32f4_timer_properties.c</FilePath>
-            </File>
-            <File>
-              <FileName>tm_stm32f4_timer_properties.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\00-STM32F429_LIBRARIES\tm_stm32f4_timer_properties.h</FilePath>
-            </File>
-            <File>
-              <FileName>tm_stm32f4_pwm.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\00-STM32F429_LIBRARIES\tm_stm32f4_pwm.c</FilePath>
-            </File>
-            <File>
-              <FileName>tm_stm32f4_pwm.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\00-STM32F429_LIBRARIES\tm_stm32f4_pwm.h</FilePath>
-            </File>
-            <File>
-              <FileName>tm_stm32f4_gpio.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\00-STM32F429_LIBRARIES\tm_stm32f4_gpio.c</FilePath>
-            </File>
-            <File>
-              <FileName>tm_stm32f4_gpio.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\00-STM32F429_LIBRARIES\tm_stm32f4_gpio.h</FilePath>
+              <FilePath>.\00-STM32F429_LIBRARIES\tm_stm32f4_disco.h</FilePath>
             </File>
             <File>
               <FileName>tm_stm32f4_exti.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\..\STM\tm_stm32f4_exti\tm_stm32f4_exti.c</FilePath>
-            </File>
-            <File>
-              <FileName>attributes.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\..\..\STM\tm_stm32f4_exti\attributes.h</FilePath>
+              <FilePath>.\00-STM32F429_LIBRARIES\tm_stm32f4_exti.c</FilePath>
             </File>
             <File>
               <FileName>tm_stm32f4_exti.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\..\..\..\STM\tm_stm32f4_exti\tm_stm32f4_exti.h</FilePath>
+              <FilePath>.\00-STM32F429_LIBRARIES\tm_stm32f4_exti.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -1259,69 +1214,24 @@
           <GroupName>TM</GroupName>
           <Files>
             <File>
-              <FileName>tm_stm32f4_delay.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\00-STM32F429_LIBRARIES\tm_stm32f4_delay.h</FilePath>
-            </File>
-            <File>
-              <FileName>tm_stm32f4_delay.c</FileName>
+              <FileName>tm_stm32f4_disco.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\00-STM32F429_LIBRARIES\tm_stm32f4_delay.c</FilePath>
+              <FilePath>.\00-STM32F429_LIBRARIES\tm_stm32f4_disco.c</FilePath>
             </File>
             <File>
               <FileName>tm_stm32f4_disco.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\00-STM32F429_LIBRARIES\tm_stm32f4_disco.h</FilePath>
-            </File>
-            <File>
-              <FileName>tm_stm32f4_disco.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\00-STM32F429_LIBRARIES\tm_stm32f4_disco.c</FilePath>
-            </File>
-            <File>
-              <FileName>tm_stm32f4_timer_properties.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\00-STM32F429_LIBRARIES\tm_stm32f4_timer_properties.c</FilePath>
-            </File>
-            <File>
-              <FileName>tm_stm32f4_timer_properties.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\00-STM32F429_LIBRARIES\tm_stm32f4_timer_properties.h</FilePath>
-            </File>
-            <File>
-              <FileName>tm_stm32f4_pwm.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\00-STM32F429_LIBRARIES\tm_stm32f4_pwm.c</FilePath>
-            </File>
-            <File>
-              <FileName>tm_stm32f4_pwm.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\00-STM32F429_LIBRARIES\tm_stm32f4_pwm.h</FilePath>
-            </File>
-            <File>
-              <FileName>tm_stm32f4_gpio.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\00-STM32F429_LIBRARIES\tm_stm32f4_gpio.c</FilePath>
-            </File>
-            <File>
-              <FileName>tm_stm32f4_gpio.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\00-STM32F429_LIBRARIES\tm_stm32f4_gpio.h</FilePath>
+              <FilePath>.\00-STM32F429_LIBRARIES\tm_stm32f4_disco.h</FilePath>
             </File>
             <File>
               <FileName>tm_stm32f4_exti.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\..\STM\tm_stm32f4_exti\tm_stm32f4_exti.c</FilePath>
-            </File>
-            <File>
-              <FileName>attributes.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\..\..\STM\tm_stm32f4_exti\attributes.h</FilePath>
+              <FilePath>.\00-STM32F429_LIBRARIES\tm_stm32f4_exti.c</FilePath>
             </File>
             <File>
               <FileName>tm_stm32f4_exti.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\..\..\..\STM\tm_stm32f4_exti\tm_stm32f4_exti.h</FilePath>
+              <FilePath>.\00-STM32F429_LIBRARIES\tm_stm32f4_exti.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -1959,69 +1869,24 @@
           <GroupName>TM</GroupName>
           <Files>
             <File>
-              <FileName>tm_stm32f4_delay.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\00-STM32F429_LIBRARIES\tm_stm32f4_delay.h</FilePath>
-            </File>
-            <File>
-              <FileName>tm_stm32f4_delay.c</FileName>
+              <FileName>tm_stm32f4_disco.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\00-STM32F429_LIBRARIES\tm_stm32f4_delay.c</FilePath>
+              <FilePath>.\00-STM32F429_LIBRARIES\tm_stm32f4_disco.c</FilePath>
             </File>
             <File>
               <FileName>tm_stm32f4_disco.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\00-STM32F429_LIBRARIES\tm_stm32f4_disco.h</FilePath>
-            </File>
-            <File>
-              <FileName>tm_stm32f4_disco.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\00-STM32F429_LIBRARIES\tm_stm32f4_disco.c</FilePath>
-            </File>
-            <File>
-              <FileName>tm_stm32f4_timer_properties.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\00-STM32F429_LIBRARIES\tm_stm32f4_timer_properties.c</FilePath>
-            </File>
-            <File>
-              <FileName>tm_stm32f4_timer_properties.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\00-STM32F429_LIBRARIES\tm_stm32f4_timer_properties.h</FilePath>
-            </File>
-            <File>
-              <FileName>tm_stm32f4_pwm.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\00-STM32F429_LIBRARIES\tm_stm32f4_pwm.c</FilePath>
-            </File>
-            <File>
-              <FileName>tm_stm32f4_pwm.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\00-STM32F429_LIBRARIES\tm_stm32f4_pwm.h</FilePath>
-            </File>
-            <File>
-              <FileName>tm_stm32f4_gpio.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\00-STM32F429_LIBRARIES\tm_stm32f4_gpio.c</FilePath>
-            </File>
-            <File>
-              <FileName>tm_stm32f4_gpio.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\00-STM32F429_LIBRARIES\tm_stm32f4_gpio.h</FilePath>
+              <FilePath>.\00-STM32F429_LIBRARIES\tm_stm32f4_disco.h</FilePath>
             </File>
             <File>
               <FileName>tm_stm32f4_exti.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\..\STM\tm_stm32f4_exti\tm_stm32f4_exti.c</FilePath>
-            </File>
-            <File>
-              <FileName>attributes.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\..\..\STM\tm_stm32f4_exti\attributes.h</FilePath>
+              <FilePath>.\00-STM32F429_LIBRARIES\tm_stm32f4_exti.c</FilePath>
             </File>
             <File>
               <FileName>tm_stm32f4_exti.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\..\..\..\STM\tm_stm32f4_exti\tm_stm32f4_exti.h</FilePath>
+              <FilePath>.\00-STM32F429_LIBRARIES\tm_stm32f4_exti.h</FilePath>
             </File>
           </Files>
         </Group>
@@ -2658,69 +2523,24 @@
           <GroupName>TM</GroupName>
           <Files>
             <File>
-              <FileName>tm_stm32f4_delay.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\00-STM32F429_LIBRARIES\tm_stm32f4_delay.h</FilePath>
-            </File>
-            <File>
-              <FileName>tm_stm32f4_delay.c</FileName>
+              <FileName>tm_stm32f4_disco.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\00-STM32F429_LIBRARIES\tm_stm32f4_delay.c</FilePath>
+              <FilePath>.\00-STM32F429_LIBRARIES\tm_stm32f4_disco.c</FilePath>
             </File>
             <File>
               <FileName>tm_stm32f4_disco.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\00-STM32F429_LIBRARIES\tm_stm32f4_disco.h</FilePath>
-            </File>
-            <File>
-              <FileName>tm_stm32f4_disco.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\00-STM32F429_LIBRARIES\tm_stm32f4_disco.c</FilePath>
-            </File>
-            <File>
-              <FileName>tm_stm32f4_timer_properties.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\00-STM32F429_LIBRARIES\tm_stm32f4_timer_properties.c</FilePath>
-            </File>
-            <File>
-              <FileName>tm_stm32f4_timer_properties.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\00-STM32F429_LIBRARIES\tm_stm32f4_timer_properties.h</FilePath>
-            </File>
-            <File>
-              <FileName>tm_stm32f4_pwm.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\00-STM32F429_LIBRARIES\tm_stm32f4_pwm.c</FilePath>
-            </File>
-            <File>
-              <FileName>tm_stm32f4_pwm.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\00-STM32F429_LIBRARIES\tm_stm32f4_pwm.h</FilePath>
-            </File>
-            <File>
-              <FileName>tm_stm32f4_gpio.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\00-STM32F429_LIBRARIES\tm_stm32f4_gpio.c</FilePath>
-            </File>
-            <File>
-              <FileName>tm_stm32f4_gpio.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\00-STM32F429_LIBRARIES\tm_stm32f4_gpio.h</FilePath>
+              <FilePath>.\00-STM32F429_LIBRARIES\tm_stm32f4_disco.h</FilePath>
             </File>
             <File>
               <FileName>tm_stm32f4_exti.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\..\STM\tm_stm32f4_exti\tm_stm32f4_exti.c</FilePath>
-            </File>
-            <File>
-              <FileName>attributes.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\..\..\STM\tm_stm32f4_exti\attributes.h</FilePath>
+              <FilePath>.\00-STM32F429_LIBRARIES\tm_stm32f4_exti.c</FilePath>
             </File>
             <File>
               <FileName>tm_stm32f4_exti.h</FileName>
               <FileType>5</FileType>
-              <FilePath>..\..\..\..\STM\tm_stm32f4_exti\tm_stm32f4_exti.h</FilePath>
+              <FilePath>.\00-STM32F429_LIBRARIES\tm_stm32f4_exti.h</FilePath>
             </File>
           </Files>
         </Group>

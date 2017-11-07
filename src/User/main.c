@@ -25,6 +25,7 @@ uint8_t auto_reload = 0;
 uint8_t scale = 0;
 uint16_t bounds[] = {65, 655, 6553, 32768};
 uint16_t prescalers[] = {83, 839, 8339, 41999};
+uint16_t scalers[] = {1000, 100, 10, 2};
 
 uint8_t delay = 12; // in milliseconds
 uint8_t pulse_delay = 20; // in milliseconds
@@ -166,17 +167,21 @@ void Init_Pre(){
 }
 
 void Set_Periods(){
-	pulse_delay_timer.Period = (pulse_delay+delay)*1000-1;
+	pulse_delay_timer.Period = (pulse_delay+pulse)*scalers[scale]-1;
 	pulse_delay_timer.Prescaler = prescalers[scale];
-	delay_timer.Period = delay*1000-1;
+	delay_timer.Period = delay*scalers[scale]-1;
 	delay_timer.Prescaler = prescalers[scale];
-	pre_timer.Period = pulse*1000-1;
+	pre_timer.Period = pulse*scalers[scale]-1;
 	pre_timer.Prescaler = prescalers[scale];
-	post_timer.Period = pulse*1000-1;
+	post_timer.Period = pulse*scalers[scale]-1;
 	post_timer.Prescaler = prescalers[scale];
 }
 
 void Init(){
+	uint16_t times[] = { pulse, pulse_delay, delay };
+	for (uint16_t *p = times; p < times+3; ++p){
+		Rescale(*p);
+	}
 	Set_Periods();
 	Init_LED();
 	Init_Button_Interrupt();
@@ -190,6 +195,7 @@ void Init(){
 void ReinitDelays(){
 	Stop_Timers();
 	turn_off = 0;
+	GPIO_WriteBit(GPIOD, GPIO_Pin_14, Bit_RESET);
 	Set_Periods();
 	if ((impulse_mode == MULTI) && auto_reload){
 		TIM_Cmd(TIM5, ENABLE);
@@ -246,6 +252,8 @@ uint8_t Parse_Apply_Cmd(char *cmd_str){
 		}
 	} else {
 		if (strcmp(commands[0],cmd_str)){
+			Stop_Timers();
+			GPIO_WriteBit(GPIOD, GPIO_Pin_14, Bit_RESET);
 			impulse_mode = !impulse_mode;
 			return 1;
 		}
@@ -263,7 +271,7 @@ void USART2_IRQHandler(){
 			if (Parse_Apply_Cmd(buff)){
 				Send_Message("OK");
 			} else {
-				Send_Message(strcat("Unresolved command", buff));
+				Send_Message(strcat("Error", buff));
 			}
 			memset(buff, 0, CMD_MAX_LEN);
 			p_buff = buff;
@@ -278,7 +286,8 @@ void Send_Message(char *msg){
 	char *p_msg = msg;
 	while(p_msg < msg+len){
 		while(USART_GetITStatus(USART2, USART_IT_TXE) == SET);
-		USART_SendData(USART2, (*p_msg)++);
+		USART_SendData(USART2, *p_msg);
+		p_msg++;
 	}
 }
 
@@ -350,15 +359,7 @@ int main(void) {
 	/* Initialize system */
 	SystemInit();
 	
-	//Init();
-	Set_Periods();
-	Init_LED();
-	Init_Button_Interrupt();
-	//Init_USART();
-	Init_Pulse_Delay();
-	Init_Delay();
-	Init_Pre();
-	Init_Post();
+	Init();
 	
 	while (1){
 	

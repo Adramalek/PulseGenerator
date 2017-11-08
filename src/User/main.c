@@ -285,8 +285,8 @@ void Send_Message(char *msg){
 	int len = strlen(msg);
 	char *p_msg = msg;
 	while(p_msg < msg+len){
-		while(USART_GetITStatus(USART2, USART_IT_TXE) == SET);
 		USART_SendData(USART2, *p_msg);
+		while(USART_GetFlagStatus(USART2,USART_FLAG_TC)!=SET);		
 		p_msg++;
 	}
 }

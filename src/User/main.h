@@ -71,7 +71,6 @@ uint8_t tmd = 1;
 uint32_t turn_off = 0;
 uint8_t step = 0;
 
-
 Impulse_Mode impulse_mode = MULTI;
 
 /**

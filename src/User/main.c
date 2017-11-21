@@ -120,26 +120,6 @@ static void Init_Timer(TIM_Data *timer){
 	TIM_ITConfig (timer->TIM, TIM_IT_Update, ENABLE);
 }
 
-void Init_Pulse_Delay(){
-	Init_Timer(&pulse_delay_timer);
-}
-
-void Init_Delay(){
-	Init_Timer(&delay_timer);
-}
-
-void Init_Post(){
-	Init_Timer(&post_timer);
-}
-
-void Init_Pre(){
-	Init_Timer(&pre_timer);
-}
-
-void Init_Minute_Timer(){
-	Init_Timer(&minute_timer);
-}
-
 void Set_Periods(){
 	pulse_delay_timer.Period = (pulse_delay+pulse)*scalers[scale]-1;
 	pulse_delay_timer.Prescaler = prescalers[scale];
@@ -198,10 +178,6 @@ uint8_t Rescale(uint8_t time){
 	return is_valid;
 }
 
-void Set_Autoreload(uint8_t enable){
-	auto_reload = enable;
-}
-
 void Set_Delay(uint8_t value){
 	if (Rescale(value)){
 		delay = value;
@@ -229,26 +205,38 @@ void Reset_Time(uint8_t new_time){
 	Set_Time();
 }
 
+void Switch_Mode(){
+	Stop_Timers();
+	GPIO_WriteBit(GPIOD, GPIO_Pin_14, Bit_RESET);
+	impulse_mode = !impulse_mode;
+}
+
+void Switch_Timer_Mode(){
+	Stop_Timers();
+	GPIO_WriteBit(GPIOD, GPIO_Pin_14, Bit_RESET);
+	GPIO_WriteBit(GPIOD, GPIO_Pin_13, Bit_RESET);
+	tmd = !tmd;
+}
+
+void Set_AutoReload(uint8_t enable){
+	auto_reload = enable;
+}
+
 uint8_t Parse_Apply_Cmd(char *cmd_str){
 	char *token = strtok(cmd_str, " ");
 	if (token != NULL){
-		for (int i = 1; i < 5; ++i){
+		for (int i = 0; i < cmd_len; ++i){
 			if (strcmp(commands[i], token)){
-				handlers[i-1](strtol((token = strtok(NULL, " ")),NULL, 10));
+				handlers[i](strtol((token = strtok(NULL, " ")),NULL, 10));
 				return 1;
 			}
 		}
 	} else {
-		if (strcmp(commands[1],cmd_str)){
-			Stop_Timers();
-			GPIO_WriteBit(GPIOD, GPIO_Pin_14, Bit_RESET);
-			impulse_mode = !impulse_mode;
-			return 1;
-		} else if (strcmp(commands[0],cmd_str)){
-			Stop_Timers();
-			GPIO_WriteBit(GPIOD, GPIO_Pin_14, Bit_RESET);
-			GPIO_WriteBit(GPIOD, GPIO_Pin_13, Bit_RESET);
-			tmd = !tmd;
+		for (uint8_t i = 0; i < no_arg_cmd_len; ++i){
+			if (strcmp(commands[i], cmd_str)){
+				no_args_handlers[i]();
+				return 1;
+			}
 		}
 	}
 	return 0;
@@ -367,9 +355,7 @@ void EXTI0_IRQHandler(){
 int main(void) {
 	//PD12 -- Pre, PD15 - Post
 	
-	/* Initialize system */
 	SystemInit();
-	
 	Init();
 	
 	while (1){

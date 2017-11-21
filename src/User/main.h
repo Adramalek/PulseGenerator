@@ -31,10 +31,10 @@ typedef struct {
 	uint8_t NVIC_TIM_IRQChannel;
 } TIM_Data;
 
+void Init_Timer(TIM_Data*);
 void Start_Timers(void);
 void Stop_Timers(void);
 uint8_t Rescale(uint8_t);
-void Set_Autoreload(uint8_t);
 void Set_Delay(uint8_t);
 void Set_Pulse(uint8_t);
 void Set_Pulse_Delay(uint8_t); // this is not an union of two functions above
@@ -44,17 +44,17 @@ uint8_t Parse_Apply_Cmd(char*);
 void Send_Message(char *);
 void ReinitDelays(void);
 void Init(void);
-void Init_Minute_Timer(void);
-void Init_Pre(void);
-void Init_Post(void);
-void Init_Delay(void);
-void Init_Pulse_Delay(void);
 void Init_USART(void);
 void Init_LED(void);
 void Init_Button_Interrupt(void);
-
-//#ifndef SETTINGS
-//#define SETTINGS
+inline void Set_AutoReload(uint8_t);
+inline void Init_Minute_Timer(void);
+inline void Init_Pre(void);
+inline void Init_Post(void);
+inline void Init_Delay(void);
+inline void Init_Pulse_Delay(void);
+inline void Switch_Mode(void);
+inline void Switch_Timer_Mode(void);
 
 const uint16_t bounds[] = {65, 655, 6553, 32768};
 const uint16_t prescalers[] = {83, 839, 8339, 41999};
@@ -81,9 +81,7 @@ Impulse_Mode impulse_mode = MULTI;
 -- setpl: set pulse time. Argument: unsigned integer.
 -- setpdl: set delay between pulses. Argument: unsigned integer.
 */
-char *commands[] = {"tmd", "chmod", "autorld", "setdl", "setpl", "setpdl", "settm"};
-void (*handlers[])(uint8_t) = {&Set_Autoreload ,&Set_Delay, &Set_Pulse, &Set_Pulse_Delay, &Reset_Time};
-//void (*no_args_handlers[])(void) = {};
+
 
 TIM_Data pulse_delay_timer = {0, 0, TIM_CounterMode_Down, TIM5, RCC_APB1Periph_TIM5, TIM5_IRQn};
 TIM_Data delay_timer = {0, 0, TIM_CounterMode_Up, TIM3, RCC_APB1Periph_TIM3, TIM3_IRQn};
@@ -92,6 +90,31 @@ TIM_Data post_timer = {0, 0, TIM_CounterMode_Up, TIM2, RCC_APB1Periph_TIM2, TIM2
 TIM_Data minute_timer = {0, 0, TIM_CounterMode_Up, TIM7, RCC_APB1Periph_TIM7, TIM7_IRQn};
 
 char buff[CMD_MAX_LEN];
-//#endif
 
+inline void Init_Pulse_Delay(){
+	Init_Timer(&pulse_delay_timer);
+}
+
+inline void Init_Delay(){
+	Init_Timer(&delay_timer);
+}
+
+inline void Init_Post(){
+	Init_Timer(&post_timer);
+}
+
+inline void Init_Pre(){
+	Init_Timer(&pre_timer);
+}
+
+inline void Init_Minute_Timer(){
+	Init_Timer(&minute_timer);
+}
+
+char *commands[] = {"autorld", "setdl", "setpl", "setpdl", "settm"};
+const uint8_t cmd_len = 5;
+char *no_arg_commands[] = {"tmd", "chmod"};
+const uint8_t no_arg_cmd_len = 2;
+void (*handlers[])(uint8_t) = {&Set_AutoReload ,&Set_Delay, &Set_Pulse, &Set_Pulse_Delay, &Reset_Time};
+void (*no_args_handlers[])(void) = {&Switch_Timer_Mode, &Switch_Mode};
 #endif

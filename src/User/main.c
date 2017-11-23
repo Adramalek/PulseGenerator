@@ -20,36 +20,6 @@
  
 #include "main.h"
 
-uint8_t auto_reload = 0;
-
-uint8_t scale = 0;
-uint16_t bounds[] = {65, 655, 6553, 32768};
-uint16_t prescalers[] = {83, 839, 8339, 41999};
-uint16_t scalers[] = {1000, 100, 10, 2};
-
-uint8_t delay = 12; // in milliseconds
-uint8_t pulse_delay = 20; // in milliseconds
-uint8_t pulse = 20; // in milliseconds
-
-Impulse_Mode impulse_mode = MULTI;
-
-/**
-	Commands list.
--- chmod: switch current mode between SINGLE and MULTI. No arguments.
--- autorld: enables/disables auto reload of impulses after changes. Recieve 0 or 1 as argument.
--- setdl: set delay between channels. Agument: unsigned integer.
--- setpl: set pulse time. Argument: unsigned integer.
--- setpdl: set delay between pulses. Argument: unsigned integer.
-*/
-char *commands[] = {"chmod", "autorld", "setdl", "setpl", "setpdl"};
-void (*handlers[])(uint8_t) = {&Set_Autoreload ,&Set_Delay, &Set_Pulse, &Set_Pulse_Delay};
-
-static TIM_Data pulse_delay_timer = {0, 0, TIM_CounterMode_Down, TIM5, RCC_APB1Periph_TIM5, TIM5_IRQn};
-static TIM_Data delay_timer = {0, 0, TIM_CounterMode_Up, TIM3, RCC_APB1Periph_TIM3, TIM3_IRQn};
-static TIM_Data pre_timer = {0, 0, TIM_CounterMode_Up, TIM4, RCC_APB1Periph_TIM4, TIM4_IRQn};
-static TIM_Data post_timer = {0, 0, TIM_CounterMode_Up, TIM2, RCC_APB1Periph_TIM2, TIM2_IRQn};
-static uint32_t turn_off = 0;
-static char buff[CMD_MAX_LEN];
 
 
 void Init_Button_Interrupt(){
@@ -91,7 +61,7 @@ void Init_Button_Interrupt(){
 void Init_LED(){
 	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOD, ENABLE);
 	GPIO_InitTypeDef gpioStructure;
-	gpioStructure.GPIO_Pin = GPIO_Pin_15 | GPIO_Pin_12 | GPIO_Pin_14;
+	gpioStructure.GPIO_Pin = GPIO_Pin_12 | GPIO_Pin_13 | GPIO_Pin_14 | GPIO_Pin_15;
 	gpioStructure.GPIO_Mode = GPIO_Mode_OUT;
 	gpioStructure.GPIO_Speed = GPIO_Speed_50MHz;
 	GPIO_Init(GPIOD, &gpioStructure);
@@ -166,6 +136,10 @@ void Init_Pre(){
 	Init_Timer(&pre_timer);
 }
 
+void Init_Minute_Timer(){
+	Init_Timer(&minute_timer);
+}
+
 void Set_Periods(){
 	pulse_delay_timer.Period = (pulse_delay+pulse)*scalers[scale]-1;
 	pulse_delay_timer.Prescaler = prescalers[scale];
@@ -177,12 +151,19 @@ void Set_Periods(){
 	post_timer.Prescaler = prescalers[scale];
 }
 
+void Set_Time(){
+	minute_timer.Period = time*scalers[3];
+	minute_timer.Prescaler = prescalers[3];
+	step = time_factor;
+}
+
 void Init(){
 	uint16_t times[] = { pulse, pulse_delay, delay };
 	for (uint16_t *p = times; p < times+3; ++p){
 		Rescale(*p);
 	}
 	Set_Periods();
+	Set_Time();
 	Init_LED();
 	Init_Button_Interrupt();
 	Init_USART();
@@ -190,6 +171,7 @@ void Init(){
 	Init_Delay();
 	Init_Pre();
 	Init_Post();
+	Init_Minute_Timer();
 }
 
 void ReinitDelays(){
@@ -205,7 +187,7 @@ void ReinitDelays(){
 
 uint8_t Rescale(uint8_t time){
 	uint8_t is_valid = 0;
-	uint16_t *p = bounds;
+	const uint16_t *p = bounds;
 	do{
 		is_valid |= time < *p;
 		if (is_valid){
@@ -235,10 +217,16 @@ void Set_Pulse(uint8_t value){
 }
 
 void Set_Pulse_Delay(uint8_t value){
-	if (Rescale(value)){
-		pulse_delay = value;
+	if (Rescale(value+pulse)){
+		pulse_delay = value+pulse;
 		ReinitDelays();
 	}
+}
+
+void Reset_Time(uint8_t new_time){
+	Stop_Timers();
+	time_factor = new_time * 1000 / time;
+	Set_Time();
 }
 
 uint8_t Parse_Apply_Cmd(char *cmd_str){
@@ -251,11 +239,16 @@ uint8_t Parse_Apply_Cmd(char *cmd_str){
 			}
 		}
 	} else {
-		if (strcmp(commands[0],cmd_str)){
+		if (strcmp(commands[1],cmd_str)){
 			Stop_Timers();
 			GPIO_WriteBit(GPIOD, GPIO_Pin_14, Bit_RESET);
 			impulse_mode = !impulse_mode;
 			return 1;
+		} else if (strcmp(commands[0],cmd_str)){
+			Stop_Timers();
+			GPIO_WriteBit(GPIOD, GPIO_Pin_14, Bit_RESET);
+			GPIO_WriteBit(GPIOD, GPIO_Pin_13, Bit_RESET);
+			tmd = !tmd;
 		}
 	}
 	return 0;
@@ -323,6 +316,17 @@ void TIM5_IRQHandler(){
 		}
 }
 
+void TIM7_IRQHandler(){
+	if (TIM_GetITStatus(TIM7, TIM_IT_Update) != RESET){
+		TIM_ClearITPendingBit(TIM7, TIM_IT_Update);
+		if (!(--step)){
+			TIM_Cmd(TIM7, DISABLE);
+			Stop_Timers();
+			GPIO_WriteBit(GPIOD, GPIO_Pin_13, Bit_RESET);
+		}
+	}
+}
+
 void Start_Timers(){
 	TIM_Cmd(TIM4, ENABLE);
 	GPIO_WriteBit(GPIOD, GPIO_Pin_12, Bit_SET);
@@ -343,9 +347,16 @@ void EXTI0_IRQHandler(){
 			if (turn_off){
 				Stop_Timers();
 			} else {
+				if (tmd){
+					TIM_Cmd(TIM7, ENABLE);
+				}
 				TIM_Cmd(TIM5, ENABLE);
 			}
-			GPIO_ToggleBits(GPIOD, GPIO_Pin_14);
+			if (tmd){
+				GPIO_ToggleBits(GPIOD, GPIO_Pin_13);
+			} else {
+				GPIO_ToggleBits(GPIOD, GPIO_Pin_14);
+			}
 			turn_off = !turn_off;
 		} else {
 			Start_Timers();
